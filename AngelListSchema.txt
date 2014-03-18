@@ -1,0 +1,12 @@
+#-------------------------------------------------------------------------------
+# Name:        AngelList Schema.txt
+#-------------------------------------------------------------------------------
+
+Get/Search (Startup/User/MarketTag/LocationTag)
+    id:     unique id
+    pic:    logo/picture
+    url:    Angellist page
+    name:   proper name
+    type:   Startup/User/...
+
+Only icons for Tags
