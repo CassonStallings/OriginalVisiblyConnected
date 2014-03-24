@@ -1,0 +1,104 @@
+{
+    "name": "Xeraya Capital",
+    "permalink": "xeraya-capital",
+    "crunchbase_url": "http://www.crunchbase.com/financial-organization/xeraya-capital",
+    "homepage_url": null,
+    "blog_url": null,
+    "blog_feed_url": null,
+    "twitter_username": null,
+    "phone_number": null,
+    "description": null,
+    "email_address": null,
+    "number_of_employees": null,
+    "founded_year": null,
+    "founded_month": null,
+    "founded_day": null,
+    "tag_list": null,
+    "alias_list": null,
+    "created_at": "Thu Mar 20 12:54:31 UTC 2014",
+    "updated_at": "Thu Mar 20 12:54:31 UTC 2014",
+    "overview": null,
+    "image": null,
+    "offices": [],
+    "relationships": [],
+    "investments": [{
+        "funding_round": {
+            "round_code": "unattributed",
+            "source_url": "http://www.vcnewsdaily.com/invendo-medical/venture-capital-funding/ntnjmmgdql",
+            "source_description": "Invendo Medical Closes $28M Round",
+            "raised_amount": 28000000.0,
+            "raised_currency_code": "USD",
+            "funded_year": 2014,
+            "funded_month": 3,
+            "funded_day": 20,
+            "company": {
+                "name": "invendo medical",
+                "permalink": "invendo-medical"
+            }
+        }
+    }],
+    "milestones": [],
+    "providerships": [],
+    "funds": [],
+    "video_embeds": [],
+    "external_links": []
+}
+
+{
+    "total": 84,
+    "page": 1,
+    "crunchbase_url": "http://www.crunchbase.com/search?query=horowitz",
+    "results": [{
+        "first_name": "Ben",
+        "last_name": "Horowitz",
+        "permalink": "ben-horowitz",
+        "crunchbase_url": "http://www.crunchbase.com/person/ben-horowitz",
+        "homepage_url": "http://www.bhorowitz.com",
+        "namespace": "person",
+        "overview": "Ben Horowitz is a co-founder and general partner of the venture capital fund, [Andreessen Horowitz](/financial-organization/andreessen-horowitz).\r\n\r\nHorowitz was a co-founder and CEO of Opsware (formerly Loudcloud), which was acquired by HP in 2007, and Horowitz was appointed vice president and general manager of Business Technology Optimization for Software at [HP](/company/hewlett-packard). Earlier, he was vice president and general manager of America Online's E-commerce Platform division, where he oversaw development of the company's flagship Shop@AOL service.\r\n\r\nPreviously, Horowitz ran several product divisions at Netscape Communications. Horowitz also served as vice president of Netscape's widely acclaimed Directory and Security product line. Before joining Netscape in July 1995, he held various senior product marketing positions at Lotus Development Corporation.\r\n\r\nHorowitz donates his time to a number of organizations, including the American Jewish World Service, Columbia University, Stanford Hospital, Silicon Valley Social Venture Fund, Via Ball, and Via Rehabilitation.\r\n\r\nHorowitz's [blog](http://www.bhorowitz.com) reflects on the many experiences he\u2019s had throughout his career.\r\n",
+        "image": {
+            "available_sizes": [
+                [
+                 [450,
+                    300], "assets/images/resized/0002/4273/24273v5-max-450x450.jpg"]
+            ],
+            "attribution": "\u003Cp\u003EAndreessen Horowitz\u003C/p\u003E"
+        }
+    },
+
+    {
+        "first_name": "Russell",
+        "last_name": "C. Horowitz",
+        "permalink": "russell-c-horowitz",
+        "crunchbase_url": "http://www.crunchbase.com/person/russell-c-horowitz",
+        "homepage_url": null,
+        "namespace": "person",
+        "overview": "Mr. Horowitz is a founding officer and has served as the Chairman of our board of Financial Officer of Active Apparel Group, now Everlast Worldwide. Mr. Horowitz received a B.A. in Economics from Columbia College of Columbia University.",
+        "image": {
+            "available_sizes": [
+                [
+
+                    [200,
+                    200], "assets/images/resized/0030/9012/309012v1-max-450x450.jpg"]
+            ],
+            "attribution": ""
+        }
+    }, {
+        "first_name": "David",
+        "last_name": "B. Horowitz",
+        "permalink": "david-b-horowitz",
+        "crunchbase_url": "http://www.crunchbase.com/person/david-b-horowitz",
+        "homepage_url": "http://www.genacast.com/team",
+        "namespace": "person",
+        "overview": "David Horowitz focuses his efforts in digital media, advertising, consumer Internet, financial technology and other relevant sectors. Horowitz works closely with Genacast Ventures, a seed stage venture fund affiliated with Comcast Ventures (CV). Horowitz\u2019s responsibilities at CV include sVideology and Visible World and is involved as an advisor or board observer to a number of other CV portfolio companies. ",
+        "image": {
+            "available_sizes": [
+                [
+                    [150,
+                     [263,
+                    218], "assets/images/resized/0027/0504/270504v1-max-450x450.png"]
+            ],
+            "attribution": ""
+        }
+    }
+}

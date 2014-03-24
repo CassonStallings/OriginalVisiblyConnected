@@ -6,7 +6,9 @@
 # Copyright:   (c) Casson 2014
 # Licence:     <your licence>
 #-------------------------------------------------------------------------------
-
+# Use arguments startid=0, count=50000, num_of_list=2, log_file=progress.txt, my_api=True)
+#
+import sys
 import requests
 import json
 from simplejson.decoder import JSONDecodeError
@@ -20,19 +22,40 @@ from time import sleep
 import cPickle
 
 #import boto
-#import boto.ec2
+#import boto. ec2
 from boto.s3.key import Key
 from boto.s3.connection import S3Connection
-
+#from multiprocessing.pool import ThreadPool
 sleep_time = 0.0
 sleep_time_if_problems = 5.0
 
-#mine  crunchbase_api = 'tnfphz6pw3j9hxg2reqyzuy2'  # Crunchbase API
-crunchbase_api = 'w6jcmetvsadsga6sbxefgntn'  #  Jon's Crunchbase API
+my_api = 'tnfphz6pw3j9hxg2reqyzuy2'  # Crunchbase API
+jons_api = 'w6jcmetvsadsga6sbxefgntn'  #  Jon's Crunchbase API
 aws_id = 'AKIAIDAYSH4Y27YHDFYQ'  # aws_access_key_id
 aws_key = 'rXTjT64Fx8G7er8t39n+UZsqX0WgbXCBxW7kHaXc'  # aws_secret_access_key
-
 mongo_uri = 'mongodb://localhost:27017'  #'mongodb://54.226.78.144:27017'
+
+startid = 201380
+count = 500000
+num_of_list = 2
+log_file = 'progress.txt'
+crunchbase_api = my_api
+
+print sys.argv
+
+if len(sys.argv)>=2:
+    startid = int(sys.argv[1])
+if len(sys.argv)>=3:
+    count = int(sys.argv[2])
+if len(sys.argv)>=4:
+    num_of_list = int(sys.argv[3])
+if len(sys.argv)>=5:
+    log_file = sys.argv[4]
+if len(sys.argv)>=6:
+    if 'True' != sys.argv[5]:
+        crunchbase_api = jons_api
+
+print 'Running with startid:', startid,'  count:', count, '  num_of_list:', num_of_list, '  log_file:', log_file, '  api:',  crunchbase_api
 
 entity_type_tuples = [('financial-organizations', 'financial-organization'), ('people', 'person'), \
                       ('companies', 'company'), ('products', 'product'), \
@@ -46,7 +69,6 @@ threads = []
 q = Queue()
 error_prod = list()
 
-
 def main():
     global fil
     crunch = Crunchbase(crunchbase_api)
@@ -58,7 +80,7 @@ def main():
     #crunch.put_entity_list_in_s3(list_type='companies')
 
 
-    fil = open('progress.txt', 'w')
+    fil = open(log_file, 'w')
 
     client = MongoClient(mongo_uri)
     mc = client.crunchbase
@@ -67,13 +89,13 @@ def main():
     #    crunch.mongo_collection = mc[entity_type_list]
     #    entity_list = crunch.get_entity_list_and_pickle(entity_type_list, entity_type + '_list.pkl')
 
-
-    for entity_type_list, entity_type in entity_type_tuples[1:2]:
-        mongo_collection = mc[entity_type_list]
+    for entity_type_list, entity_type in [entity_type_tuples[num_of_list]]:
+        mongo_collection = mc[entity_type_list.replace('-', '_')]
         entity_list = crunch.get_pickled_entity_list(entity_type + '_list.pkl')
-        crunch.cycle_through_permalinks(entity_type, entity_list)
+        crunch.cycle_through_permalinks(entity_type, entity_list[startid:startid+count], mongo_collection)
 
     fil.close()
+    print 'Done Cycling Through Permalinks'
 
     # entity_list = crunch.get_entity_list_and_pickle('financial-organizations', 'financial_list.pkl')
     # entity_list = crunch.get_pickled_entity_list('financial_list.pkl')
@@ -183,34 +205,56 @@ class Crunchbase():
         # #q.task_done()
         # #print 'Call API Execution Time',time.time()-t0
 
-    def cycle_through_permalinks(self, entity_type, permalink_list):
-        global crunchbase_api,fil
-        t0 = i = 0
 
-        for i, link in enumerate(permalink_list):
-            i = i + 1
-            if (i % 10) == 0:
-                out_str = 'Entity_type, Iter, time for last 10:' + entity_type + ' ' + str(i) + ' ' + str(time.time()-t0)
-                print out_str
-                fil.writelines([out_str])
-                fil.flush()
-                t0 = time.time()
-            if len(threads) >= num_threads:
-                while q.empty():
-                    sleep(1)
-                    end = time.time()
-                    #print "queue empty @ :"   #, end - start
-                status = q.get()
-            t = Thread(target=api_call, args=(link, entity_type, crunchbase_api, q))
-            t.deamon = True
-            t.start()
-            threads.append(t)
-        for t in threads:
-            t.join()
-            #    end = time.time()
-            #    diff = end-start
-            #    print diff
-            #end = time.time()
+    def cycle_through_permalinks(self, entity_type, permalink_list, mongo_collection):
+        global fil
+        t0 = i = 0
+        #pool = ThreadPool(processes=10)
+        for i in xrange(0, len(permalink_list), 10):
+            duration = time.time() - t0
+            if duration < 1:
+                sleep(1.1 - duration)
+                print 'sleeping for', 1.1 - duration
+            t0 = time.time()
+            out_str = 'Starting Iter, time for last 10: ' + entity_type + ' ' + str(i+startid) + ' ' + str(duration) + ' Seconds'
+            print out_str
+            fil.writelines(['\n',out_str])
+            fil.flush()
+            links = permalink_list[i:i+10]
+            tl0 = time.time()
+            for link in links:
+                link_dur = time.time() - tl0
+                if link_dur < 1:
+                    sleep(1-link_dur)
+                link_entity_tuples = (entity_type, mongo_collection, link)
+                api_call(link_entity_tuples)
+
+            #print 'tuples', link_entity_tuples
+            #pool.map(api_call, link_entity_tuples)
+
+
+    def cycle_through_permalinks_with_pools(self, entity_type, permalink_list, mongo_collection):
+        global fil
+        t0 = i = 0
+        pool = ThreadPool(processes=10)
+        for i in xrange(0, len(permalink_list), 10):
+            duration = time.time() - t0
+            print time.time(), t0, duration
+            if duration < 1:
+                sleep(1.1 - duration)
+                print 'sleeping for', 1.1 - duration
+            out_str = 'Entity_type, Iter, time for last 10: ' + entity_type + ' ' + str(i) + ' ' + str(duration)
+            print out_str
+            fil.writelines([out_str])
+            fil.flush()
+            links = permalink_list[i:i+10]
+            link_entity_tuples = [(entity_type, mongo_collection, links[i]) for i in xrange(10)]
+
+            #print 'tuples', link_entity_tuples
+            pool.map(api_call, link_entity_tuples)
+            t0 = time.time()
+
+
 
             #     def cycle_through_permalinks(self, entity_type, permalink_list):
             #          global fil, num_threads, q, threads
@@ -346,23 +390,34 @@ class Crunchbase():
    #      #t0 = time.time()
    #      temp = requests.get(url)
 
-def api_call(link, entity_type, api_key, q):
-    global mongo_collection, error_prod
-    a = 'http://api.crunchbase.com/v/1/' + entity_type + '/' + link + '.js?api_key=' + api_key
-    temp = requests.get(a)
+def api_call(link_type_tuple):
+    global crunchbase_api
+    entity_type, mongo_collection, permalink = link_type_tuple
+    a = 'http://api.crunchbase.com/v/1/' + entity_type + '/' + permalink + '.js?api_key=' + crunchbase_api
     try:
+        temp = requests.get(a)
+        if temp.status_code != 200:
+            sleep(3)
+            temp = requests.get(a)
         d = temp.json()
-        d['_id'] = d['permakey']
-        mongo_collection.insert(d)
-        q.put("success for %s" % link)
-    except:
-        error_prod.append(link)
-        q.put('error for %s' % link)
+        d['_id'] = permalink
+        mongo_collection.save(d)
 
-#     finally:
-#         sleep(1)
-
-# Spawn a thread for each fold
+    except JSONDecodeError as de:
+        print 'Decode Error on ', temp.status_code, a
+        fil.writelines(['\ndecode error: ' + permalink])
+        sleep(3)
+    except ValueError as ev:
+        print 'Expected Value Error, Get Status_code', temp.status_code, 'Retry after sleep'
+        sleep(3)
+        temp = requests.get(a)
+        d = temp.json()
+        d['_id'] = permalink
+        mongo_collection.save(d)
+        if temp.status_code == 200:
+            print 'Success for ', a, '\n'
+    except BaseException as exp:
+        print 'Error in api_call, Text:', exp, link_type_tuple
 
 if __name__ == '__main__':
     main()

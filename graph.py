@@ -1,4 +1,6 @@
 #-------------------------------------------------------------------------------
+# Most of this was pulled out and put in graph_build which doesn't mix in the crunchbase
+#
 # Name:        graph.py
 # Purpose:     extends py2neo Graph
 # Author:      Casson
@@ -40,7 +42,7 @@ def main():
     transcript = g.start_transaction()
     #transcript = g.get_or_create_node(transcript, 'trash', '{ key: "trash"}')
 
-    cnt = add_financial_from_list(g, transcript, max_nodes=1)  ##, max_nodes=2)
+    #cnt = add_financial_from_list(g, transcript, max_nodes=1)  ##, max_nodes=2)
     g.commit_transaction(transcript)
     print 'done: count nodes retrieved',# cnt
 
@@ -119,19 +121,19 @@ class Graph(neo4j.GraphDatabaseService):
         #    self.add_milestones(n, d)
         #if d['offices']:
         #    self.add_offices(n, d)
-        return n
+        return None
 
 
     def add_relationships(self, n, transcript, dict_list, relationship_type):
-        #nidx = self.get_or_create_index(neo4j.Node, 'person')
+        nidx = self.get_or_create_index(neo4j.Node, 'person')
         #ridx = self.get_or_create_index(neo4j.Relationship, relationship_type)
 
         for d in dict_list:
             drelation = copy.copy(d)
             del drelation['person']
 
-            transcript.append('match ' + n , '-[:' + relationship_type {'permalink': d['person']['permalink']})
-            #n2 = self.get_or_create_indexed_node(nidx, 'permalink', d['person']['permalink'])
+            transcript.append('match ' + n , '-[:' + relationship_type + {'permalink': d['person']['permalink']})
+            n2 = self.get_or_create_indexed_node(nidx, 'permalink', d['person']['permalink'])
             #print 'n2', type(n2), n2
             if 'visited' not in n2:
                 n2.update_properties(d['person'])
