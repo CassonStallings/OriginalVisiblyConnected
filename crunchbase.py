@@ -15,9 +15,6 @@ import boto.ec2
 sleep_time = 0.0
 crunchbase_api = 'tnfphz6pw3j9hxg2reqyzuy2'         # Crunchbase API
 
-aws_id = 'AKIAIDAYSH4Y27YHDFYQ'                      #aws_access_key_id
-aws_key = 'rXTjT64Fx8G7er8t39n+UZsqX0WgbXCBxW7kHaXc' #aws_secret_access_key
-
 
 def main():
 
