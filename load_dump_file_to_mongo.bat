@@ -1,6 +1,13 @@
-c:\mongodb\bin\mongorestore --db companies C:\Users\Casson\Desktop\Startups\Data\dump\CB_companies
-c:\mongodb\bin\mongorestore --db financial C:\Users\Casson\Desktop\Startups\Data\dump\CB_financial
-c:\mongodb\bin\mongorestore --db people C:\Users\Casson\Desktop\Startups\Data\dump\CB_people
-c:\mongodb\bin\mongorestore --db products C:\Users\Casson\Desktop\Startups\Data\dump\CB_products
-c:\mongodb\bin\mongorestore --db services C:\Users\Casson\Desktop\Startups\Data\dump\CB_services
+# back up data
+mongodump --collection companies --db crunchbase
+mongodump --collection people --db crunchbase
+mongodump --collection financial_organizations --db crunchbase
+mongodump --collection products --db crunchbase
+mongodump --collection service_providers --db crunchbase
+
+
+# restoring data to single database named crunchbase
+
+c:\mongodb\bin\mongorestore --drop C:\Users\Casson\Desktop\Startups\Data\mongo_dump_2014Mar24
+
 
