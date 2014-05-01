@@ -1,6 +1,6 @@
    5     Ben Horowitz-Personal
  381     Andreessen Horowitz
-
+ 4725    Palintar-technologies
 
 {
     "first_name": "Ben",
@@ -4722,4 +4722,634 @@
     }],
     "video_embeds": [],
     "external_links": []
+}
+----------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------
+
+{
+    "name": "Palantir Technologies",
+    "permalink": "palantir-technologies",
+    "crunchbase_url": "http://www.crunchbase.com/company/palantir-technologies",
+    "homepage_url": "http://www.palantir.com",
+    "blog_url": "http://blog.palantir.com",
+    "blog_feed_url": "http://blog.palantir.com/feed/",
+    "twitter_username": "palantirtech",
+    "category_code": "analytics",
+    "number_of_employees": 1095,
+    "founded_year": 2004,
+    "founded_month": null,
+    "founded_day": null,
+    "deadpooled_year": null,
+    "deadpooled_month": null,
+    "deadpooled_day": null,
+    "deadpooled_url": null,
+    "tag_list": "visualization",
+    "alias_list": "",
+    "email_address": "support@palantir.com",
+    "phone_number": "650-815-0200",
+    "description": "Data fusion platform",
+    "created_at": "Fri Sep 04 18:15:23 UTC 2009",
+    "updated_at": "Mon Mar 10 22:49:22 UTC 2014",
+    "overview": "\u003Cp\u003EPalantir\u0026#8217;s mission is to solve the most important problems for the world\u0026#8217;s most important institutions.\u003C/p\u003E\n\n\u003Cp\u003EPalantir was founded in 2004 by a handful of \u003Ca href=\"/company/paypal\" title=\"PayPal\" rel=\"nofollow\"\u003EPayPal\u003C/a\u003E alumni and Stanford computer scientists. Since then Palantir has doubled in size every year while retaining early-stage values: a startup culture, strong work ethic, and rigorous hiring standards.\u003C/p\u003E\n\n\u003Cp\u003EPalantir works in a variety of problem areas for various customers in both private and public sector, helping them answer questions like: \u003C/p\u003E\n\n\u003Cul\u003E\n\u003Cli\u003EHow do you prevent the next $65Bn ponzi scheme? \u003C/li\u003E\n\u003Cli\u003EHow do you take down human trafficking networks? \u003C/li\u003E\n\u003Cli\u003EHow can we help borrowers avoid foreclosure on a massive scale/stabilize housing? \u003C/li\u003E\n\u003Cli\u003EHow can you prevent fraud in Medicare? \u003C/li\u003E\n\u003Cli\u003ECan you help governments save billions/identify ways to reduce spending? \u003C/li\u003E\n\u003Cli\u003ECan you help scientists monitor the environment after the Deepwater Horizon Oil Spill? \u003C/li\u003E\n\u003Cli\u003EHow do you defend the IP of companies from cyber espionage by bad actors? \u003C/li\u003E\n\u003Cli\u003EHow can you help stop the genocide in the Sudan? \u003C/li\u003E\n\u003Cli\u003EHow can we help target gangs to end their violence?\u003C/li\u003E\n\u003C/ul\u003E",
+    "image": {
+        "available_sizes": [
+            [
+                [150,
+                36], "assets/images/resized/0007/3542/73542v3-max-150x150.png"],
+            [
+                [250,
+                60], "assets/images/resized/0007/3542/73542v3-max-250x250.png"],
+            [
+                [450,
+                108], "assets/images/resized/0007/3542/73542v3-max-450x450.png"]
+        ],
+        "attribution": null
+    },
+    "products": [{
+        "name": "Palantir Government",
+        "permalink": "palantir-government"
+    }, {
+        "name": "Palantir Finance",
+        "permalink": "palantir-finance"
+    }],
+    "relationships": [{
+        "is_past": false,
+        "title": "Co-Founder",
+        "person": {
+            "first_name": "Joe",
+            "last_name": "Lonsdale",
+            "permalink": "joe-lonsdale"
+        }
+    }, {
+        "is_past": false,
+        "title": "CEO",
+        "person": {
+            "first_name": "Alexander",
+            "last_name": "Karp",
+            "permalink": "alexander-karp"
+        }
+    }, {
+        "is_past": false,
+        "title": "Founder/CTO",
+        "person": {
+            "first_name": "Nathan",
+            "last_name": "Gettings",
+            "permalink": "nathan-gettings"
+        }
+    }, {
+        "is_past": false,
+        "title": "EVP",
+        "person": {
+            "first_name": "Stephen",
+            "last_name": "Cohen",
+            "permalink": "stephen-cohen"
+        }
+    }, {
+        "is_past": false,
+        "title": "Chairman, Board of Directors",
+        "person": {
+            "first_name": "Peter",
+            "last_name": "Thiel",
+            "permalink": "peter-thiel"
+        }
+    }, {
+        "is_past": false,
+        "title": "",
+        "person": {
+            "first_name": "Steve",
+            "last_name": "Loughlin",
+            "permalink": "steve-loughlin"
+        }
+    }, {
+        "is_past": false,
+        "title": "Director of Engineering",
+        "person": {
+            "first_name": "Akash",
+            "last_name": "Jain",
+            "permalink": "akash-jain"
+        }
+    }, {
+        "is_past": false,
+        "title": "Advisor",
+        "person": {
+            "first_name": "Gleb",
+            "last_name": "Chuvpilo",
+            "permalink": "gleb-chuvpilo"
+        }
+    }, {
+        "is_past": false,
+        "title": "Advisor",
+        "person": {
+            "first_name": "Ross",
+            "last_name": "Fubini",
+            "permalink": "ross-fubini"
+        }
+    }, {
+        "is_past": false,
+        "title": "Investor",
+        "person": {
+            "first_name": "Kevin",
+            "last_name": "Brown",
+            "permalink": "kevin-brown-5"
+        }
+    }, {
+        "is_past": false,
+        "title": "Network Engineer",
+        "person": {
+            "first_name": "Steven",
+            "last_name": "Plunkett",
+            "permalink": "steven-plunkett"
+        }
+    }, {
+        "is_past": false,
+        "title": "Business Development",
+        "person": {
+            "first_name": "Jared",
+            "last_name": "Weinstein",
+            "permalink": "jared-weinstein-2"
+        }
+    }, {
+        "is_past": false,
+        "title": "Advisor",
+        "person": {
+            "first_name": "Kris",
+            "last_name": "Duggan",
+            "permalink": "kris-duggan"
+        }
+    }, {
+        "is_past": false,
+        "title": "Director of Engineering",
+        "person": {
+            "first_name": "Bob",
+            "last_name": "McGrew",
+            "permalink": "bob-mcgrew"
+        }
+    }, {
+        "is_past": false,
+        "title": "Director of Forward Deployed Engineering",
+        "person": {
+            "first_name": "Shyam",
+            "last_name": "Sankar",
+            "permalink": "shyam-sankar"
+        }
+    }, {
+        "is_past": false,
+        "title": "",
+        "person": {
+            "first_name": "Patrick",
+            "last_name": "Dugan",
+            "permalink": "patrick-dugan"
+        }
+    }, {
+        "is_past": false,
+        "title": "Product Designer",
+        "person": {
+            "first_name": "James",
+            "last_name": "Thompson",
+            "permalink": "james-thompson"
+        }
+    }, {
+        "is_past": false,
+        "title": "Investor",
+        "person": {
+            "first_name": "Tony",
+            "last_name": "Askew",
+            "permalink": "tony-askew"
+        }
+    }, {
+        "is_past": false,
+        "title": "Investor",
+        "person": {
+            "first_name": "Harsh",
+            "last_name": "Patel",
+            "permalink": "harsh-patel-2"
+        }
+    }, {
+        "is_past": true,
+        "title": "Vice President, Finance",
+        "person": {
+            "first_name": "David",
+            "last_name": "Bernhardt",
+            "permalink": "david-bernhardt"
+        }
+    }, {
+        "is_past": true,
+        "title": "Lead Engineer, Designer",
+        "person": {
+            "first_name": "Garry",
+            "last_name": "Tan",
+            "permalink": "garry-tan"
+        }
+    }, {
+        "is_past": true,
+        "title": "Software Engineer",
+        "person": {
+            "first_name": "Tim",
+            "last_name": "Su",
+            "permalink": "tim-su"
+        }
+    }, {
+        "is_past": true,
+        "title": "Assistant Controller",
+        "person": {
+            "first_name": "Jason",
+            "last_name": "Rodrigues",
+            "permalink": "jason-rodrigues"
+        }
+    }, {
+        "is_past": true,
+        "title": "Advisor",
+        "person": {
+            "first_name": "Brendan",
+            "last_name": "Eich",
+            "permalink": "brendan-eich"
+        }
+    }, {
+        "is_past": true,
+        "title": "Software Engineering Intern",
+        "person": {
+            "first_name": "Jason",
+            "last_name": "Mirra",
+            "permalink": "jason-mirra"
+        }
+    }, {
+        "is_past": true,
+        "title": "Investor and Advisor",
+        "person": {
+            "first_name": "Kevin",
+            "last_name": "Hartz",
+            "permalink": "kevin-hartz"
+        }
+    }, {
+        "is_past": true,
+        "title": "Software Engineer",
+        "person": {
+            "first_name": "Jonathan",
+            "last_name": "Chu",
+            "permalink": "jonathan-chu-2"
+        }
+    }, {
+        "is_past": true,
+        "title": "1st employee - Director, Operations",
+        "person": {
+            "first_name": "Alex",
+            "last_name": "Moore",
+            "permalink": "alex-moore"
+        }
+    }, {
+        "is_past": true,
+        "title": "Software Engineer",
+        "person": {
+            "first_name": "Gleb",
+            "last_name": "Chuvpilo",
+            "permalink": "gleb-chuvpilo"
+        }
+    }, {
+        "is_past": true,
+        "title": "Recruiter",
+        "person": {
+            "first_name": "Garett",
+            "last_name": "Gentry",
+            "permalink": "garett-gentry"
+        }
+    }, {
+        "is_past": true,
+        "title": "Software Engineer",
+        "person": {
+            "first_name": "Justin",
+            "last_name": "Legakis",
+            "permalink": "justin-legakis"
+        }
+    }, {
+        "is_past": true,
+        "title": "Forward Deployed Engineer Intern",
+        "person": {
+            "first_name": "Todd",
+            "last_name": "Medema",
+            "permalink": "todd-medema"
+        }
+    }, {
+        "is_past": true,
+        "title": "1st Employee",
+        "person": {
+            "first_name": "Alex",
+            "last_name": "Moore",
+            "permalink": "alex-moore"
+        }
+    }, {
+        "is_past": true,
+        "title": "",
+        "person": {
+            "first_name": "Brian",
+            "last_name": "Bland",
+            "permalink": "brian-bland"
+        }
+    }],
+    "competitions": [{
+        "competitor": {
+            "name": "i2",
+            "permalink": "i2"
+        }
+    }],
+    "providerships": [],
+    "total_money_raised": "$896M",
+    "funding_rounds": [{
+        "id": 11222,
+        "round_code": "c",
+        "source_url": "",
+        "source_description": "EDGAR",
+        "raised_amount": 35000000.0,
+        "raised_currency_code": "USD",
+        "funded_year": 2009,
+        "funded_month": 11,
+        "funded_day": 17,
+        "investments": []
+    }, {
+        "id": 16421,
+        "round_code": "d",
+        "source_url": "http://techcrunch.com/2010/06/25/palantir-the-next-billion-dollar-company-raises-90-million",
+        "source_description": "Palantir: The Next Billion-Dollar Company Raises $90 Million",
+        "raised_amount": 90000000.0,
+        "raised_currency_code": "USD",
+        "funded_year": 2010,
+        "funded_month": 6,
+        "funded_day": 25,
+        "investments": [{
+            "company": null,
+            "financial_org": {
+                "name": "Founders Fund",
+                "permalink": "founders-fund"
+            },
+            "person": null
+        }, {
+            "company": null,
+            "financial_org": {
+                "name": "Glynn Capital Management",
+                "permalink": "glynn-capital-management"
+            },
+            "person": null
+        }, {
+            "company": null,
+            "financial_org": {
+                "name": "Ulu Ventures",
+                "permalink": "ulu-ventures"
+            },
+            "person": null
+        }, {
+            "company": null,
+            "financial_org": null,
+            "person": {
+                "first_name": "Jeremy",
+                "last_name": "Stoppelman",
+                "permalink": "jeremy-stoppelman"
+            }
+        }, {
+            "company": null,
+            "financial_org": null,
+            "person": {
+                "first_name": "Keith",
+                "last_name": "Rabois",
+                "permalink": "keith-rabois"
+            }
+        }, {
+            "company": null,
+            "financial_org": null,
+            "person": {
+                "first_name": "Ben",
+                "last_name": "Ling",
+                "permalink": "ben-ling"
+            }
+        }]
+    }, {
+        "id": 22826,
+        "round_code": "e",
+        "source_url": "http://techcrunch.com/2011/05/05/sec-watch-palantir-technologies-raises-50-million-in-new-funding/",
+        "source_description": "SEC Watch: Palantir Technologies Raises $50 Million In New Funding",
+        "raised_amount": 50000000.0,
+        "raised_currency_code": "USD",
+        "funded_year": 2011,
+        "funded_month": 5,
+        "funded_day": 5,
+        "investments": []
+    }, {
+        "id": 25738,
+        "round_code": "f",
+        "source_url": "http://techcrunch.com/2011/10/06/palantir-technologies-raises-70-million-at-2-5-billion-valuation/",
+        "source_description": "Palantir Technologies Raises $70 Million At $2.5 Billion Valuation",
+        "raised_amount": 70000000.0,
+        "raised_currency_code": "USD",
+        "funded_year": 2011,
+        "funded_month": 10,
+        "funded_day": 6,
+        "investments": []
+    }, {
+        "id": 29968,
+        "round_code": "g",
+        "source_url": "http://techcrunch.com/2012/05/16/palantir-new-funding/",
+        "source_description": "Palantir Technologies Nabs $56M In New Funding, SEC Filing Shows",
+        "raised_amount": 56000000.0,
+        "raised_currency_code": "USD",
+        "funded_year": 2012,
+        "funded_month": 5,
+        "funded_day": 16,
+        "investments": [{
+            "company": null,
+            "financial_org": {
+                "name": "Founders Fund",
+                "permalink": "founders-fund"
+            },
+            "person": null
+        }]
+    }, {
+        "id": 50248,
+        "round_code": "private_equity",
+        "source_url": "http://techcrunch.com/2013/09/27/palantir-197m-sec-filing/",
+        "source_description": "Palantir Is Raising $197M In Growth Capital, SEC Filing Shows",
+        "raised_amount": 196500000.0,
+        "raised_currency_code": "USD",
+        "funded_year": 2013,
+        "funded_month": 9,
+        "funded_day": 27,
+        "investments": [{
+            "company": null,
+            "financial_org": {
+                "name": "Founders Fund",
+                "permalink": "founders-fund"
+            },
+            "person": null
+        }]
+    }, {
+        "id": 51927,
+        "round_code": "seed",
+        "source_url": "http://venturebeat.com/2013/04/25/why-in-q-tel-investment-is-a-stamp-of-approval-for-enterprise-startups/#vb-gallery:2:725284",
+        "source_description": "Why In-Q-Tel investment is a \u2018stamp of approval\u2019 for enterprise startups",
+        "raised_amount": null,
+        "raised_currency_code": "USD",
+        "funded_year": 2005,
+        "funded_month": 9,
+        "funded_day": null,
+        "investments": [{
+            "company": null,
+            "financial_org": {
+                "name": "In-Q-Tel",
+                "permalink": "in-q-tel"
+            },
+            "person": null
+        }]
+    }, {
+        "id": 57252,
+        "round_code": "private_equity",
+        "source_url": "http://www.sec.gov/Archives/edgar/data/1321655/000132165514000002/xslFormDX01/primary_doc.xml",
+        "source_description": "SEC D/A",
+        "raised_amount": 390371776.0,
+        "raised_currency_code": "USD",
+        "funded_year": 2014,
+        "funded_month": 2,
+        "funded_day": 14,
+        "investments": []
+    }, {
+        "id": 57262,
+        "round_code": "secondary_market",
+        "source_url": "",
+        "source_description": "",
+        "raised_amount": null,
+        "raised_currency_code": "USD",
+        "funded_year": 2011,
+        "funded_month": null,
+        "funded_day": null,
+        "investments": [{
+            "company": null,
+            "financial_org": {
+                "name": "137 Ventures",
+                "permalink": "137-ventures"
+            },
+            "person": null
+        }]
+    }, {
+        "id": 57263,
+        "round_code": "secondary_market",
+        "source_url": "",
+        "source_description": "",
+        "raised_amount": null,
+        "raised_currency_code": "USD",
+        "funded_year": 2013,
+        "funded_month": null,
+        "funded_day": null,
+        "investments": [{
+            "company": null,
+            "financial_org": {
+                "name": "137 Ventures",
+                "permalink": "137-ventures"
+            },
+            "person": null
+        }]
+    }, {
+        "id": 64495,
+        "round_code": "debt_round",
+        "source_url": "http://www.sec.gov/Archives/edgar/data/1321655/000132165509000003/xslFormDX01/primary_doc.xml",
+        "source_description": "SEC",
+        "raised_amount": 8291250.0,
+        "raised_currency_code": "USD",
+        "funded_year": 2009,
+        "funded_month": 4,
+        "funded_day": 14,
+        "investments": []
+    }],
+    "investments": [],
+    "acquisition": null,
+    "acquisitions": [{
+        "price_amount": null,
+        "price_currency_code": "USD",
+        "term_code": null,
+        "source_url": "http://techcrunch.com/2013/02/16/palantir-acqhires-voicegem/",
+        "source_description": "Palantir Acqhires Team Behind YC Voice Email Startup Voicegem",
+        "acquired_year": 2013,
+        "acquired_month": 2,
+        "acquired_day": 16,
+        "company": {
+            "name": "VoiceGem",
+            "permalink": "voicegem"
+        }
+    }],
+    "offices": [{
+        "description": "HQ",
+        "address1": "100 Hamilton Avenue",
+        "address2": "Suite 300",
+        "zip_code": "94301-1651",
+        "city": "Palo Alto",
+        "state_code": "CA",
+        "country_code": "USA",
+        "latitude": null,
+        "longitude": null
+    }, {
+        "description": "Rivendell",
+        "address1": "1660 International Dr",
+        "address2": "8th Floor",
+        "zip_code": "22102",
+        "city": "McLean",
+        "state_code": "VA",
+        "country_code": "USA",
+        "latitude": null,
+        "longitude": null
+    }, {
+        "description": "Gotham City",
+        "address1": "15 Little W 12th Street",
+        "address2": "",
+        "zip_code": "10014",
+        "city": "New York",
+        "state_code": "NY",
+        "country_code": "USA",
+        "latitude": null,
+        "longitude": null
+    }, {
+        "description": "Grey Havens",
+        "address1": "53 Chandos Place",
+        "address2": "Covent Garden",
+        "zip_code": "WC2N 4 HS",
+        "city": "London",
+        "state_code": null,
+        "country_code": "GBR",
+        "latitude": null,
+        "longitude": null
+    }, {
+        "description": "Arandor",
+        "address1": "7 London Circuit",
+        "address2": "",
+        "zip_code": "",
+        "city": "Canberra",
+        "state_code": null,
+        "country_code": "AUS",
+        "latitude": null,
+        "longitude": null
+    }],
+    "milestones": [],
+    "ipo": null,
+    "video_embeds": [{
+        "embed_code": "\u003Cobject id=\"flashObj\" width=\"420\" height=\"260\" classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,47,0\"\u003E\u003Cparam name=\"movie\" value=\"http://c.brightcove.com/services/viewer/federated_f9/63890987001?isVid=1\u0026isUI=1\" /\u003E\u003Cparam name=\"bgcolor\" value=\"#FFFFFF\" /\u003E\u003Cparam name=\"flashVars\" value=\"videoId=102706424001\u0026linkBaseURL=http%3A%2F%2Ftechcrunch.com%2F2010%2F06%2F25%2Fpalantir-the-next-billion-dollar-company-raises-90-million%2F\u0026playerID=63890987001\u0026domain=embed\u0026dynamicStreaming=true\" /\u003E\u003Cparam name=\"base\" value=\"http://admin.brightcove.com\" /\u003E\u003Cparam name=\"seamlesstabbing\" value=\"false\" /\u003E\u003Cparam name=\"allowFullScreen\" value=\"true\" /\u003E\u003Cparam name=\"swLiveConnect\" value=\"true\" /\u003E\u003Cparam name=\"allowScriptAccess\" value=\"always\" /\u003E\u003Cembed src=\"http://c.brightcove.com/services/viewer/federated_f9/63890987001?isVid=1\u0026isUI=1\" bgcolor=\"#FFFFFF\" flashVars=\"videoId=102706424001\u0026linkBaseURL=http%3A%2F%2Ftechcrunch.com%2F2010%2F06%2F25%2Fpalantir-the-next-billion-dollar-company-raises-90-million%2F\u0026playerID=63890987001\u0026\u0026domain=embed\u0026dynamicStreaming=true\" base=\"http://admin.brightcove.com\" name=\"flashObj\" width=\"420\" height=\"260\" seamlesstabbing=\"false\" type=\"application/x-shockwave-flash\" allowFullScreen=\"true\" allowScriptAccess=\"always\" swLiveConnect=\"true\" pluginspage=\"http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash\"\u003E\u003C/embed\u003E\u003C/object\u003E",
+        "description": ""
+    }, {
+        "embed_code": "\u003Ciframe width=\"420\" height=\"236.25\" src=\"http://www.youtube.com/embed/gUX0hxlrVXc\" frameborder=\"0\" allowfullscreen\u003E\u003C/iframe\u003E ",
+        "description": ""
+    }],
+    "screenshots": [{
+        "available_sizes": [
+            [
+                [150,
+                106], "assets/images/resized/0007/3549/73549v1-max-150x150.jpg"],
+            [
+                [250,
+                176], "assets/images/resized/0007/3549/73549v1-max-250x250.jpg"],
+            [
+                [450,
+                318], "assets/images/resized/0007/3549/73549v1-max-450x450.jpg"]
+        ],
+        "attribution": null
+    }],
+    "external_links": [],
+    "partners": []
 }
