@@ -15,17 +15,20 @@ Licence:     <your licence>
 """
 
 
-import os, sys, json, cPickle
+import os, json, cPickle
 import time
 from time import sleep
 from simplejson.decoder import JSONDecodeError
+from concurrent import futures
+#import urllib.request
+import urllib2
 import requests
 from boto.s3.key import Key
 from boto.s3.connection import S3Connection
 
-entity_type_tuples = [('financial-organizations', 'financial-organization'), ('people', 'person'),
-                      ('companies', 'company'), ('products', 'product'),
-                      ('service-providers', 'service-provider')]
+# entity_type_tuples = [('financial-organizations', 'financial-organization'), ('people', 'person'),
+#                       ('companies', 'company'), ('products', 'product'),
+#                       ('service-providers', 'service-provider')]
 
 
 class CrunchbaseApi():
@@ -66,40 +69,6 @@ class CrunchbaseApi():
     #    self.q = Queue()
     #    self.error_prod = list()
 
-    def api_call(self, link_type_tuple):
-
-        entity_type, mongo_collection, permalink = link_type_tuple
-        a = 'http://api.crunchbase.com/v/1/' + entity_type + '/' + permalink + '.js?api_key=' + self.api_key
-        try:
-            temp = requests.get(a)
-            if temp.status_code != 200:
-                sleep(3)
-                temp = requests.get(a)
-            d = temp.json()
-            d['_id'] = permalink
-            mongo_collection.save(d)
-
-        except JSONDecodeError as de:
-            print 'Decode Error on ', temp.status_code
-            print '   URL: ', a
-            print '   Error args:', de.args
-            if self.open_log_file:
-                self.open_log_file.writelines(['\ndecode error: ' + permalink])
-            sleep(3)
-
-        except ValueError as ev:
-            print 'Expected Value Error, Get Status_code', temp.status_code, 'Retry after sleep'
-            print '   Error args:', ev.args
-            sleep(3)
-            temp = requests.get(a)
-            d = temp.json()
-            d['_id'] = permalink
-            mongo_collection.save(d)
-            if temp.status_code == 200:
-                print 'Success for ', a, '\n'
-
-        except BaseException as exp:
-            print 'Error in api_call, Text:', exp, link_type_tuple
 
     def put_entity_list_in_s3(self, list_type='financial_organizations'):
         """Call api for a type and get all current permalinks, store in s3."""
@@ -157,28 +126,94 @@ class CrunchbaseApi():
                 link_dur = time.time() - tl0
                 if link_dur < 1:
                     sleep(1-link_dur)
+                #print 'cycle through permalinks, link', link, link_dur
                 link_entity_tuples = (entity_type, mongo_collection, link)
                 self.api_call(link_entity_tuples)
 
-    # def older_cycle_through_permalinks_with_pools(self, entity_type, permalink_list, mongo_collection):
-    #     t0 = i = 0
-    #     pool = ThreadPool(processes=10)
-    #     for _ in xrange(0, len(permalink_list), 10):
-    #         duration = time.time() - t0
-    #         print time.time(), t0, duration
-    #         if duration < 1:
-    #             sleep(1.1 - duration)
-    #             print 'sleeping for', 1.1 - duration
-    #         out_str = 'Entity_type, Iter, time for last 10: ' + entity_type + ' ' + str(i) + ' ' + str(duration)
-    #         print out_str
-    #         if self.open_log_file:
-    #             self.open_log_file.writelines([out_str])
-    #             self.open_log_file.flush()
-    #         links = permalink_list[i:i+10]
-    #         link_entity_tuples = [(entity_type, mongo_collection, links[j]) for j in xrange(10)]
-    #
-    #         pool.map(self.api_call, link_entity_tuples)
-    #         t0 = time.time()
+
+        def api_call(self, link_type_tuple):
+
+            entity_type, mongo_collection, permalink = link_type_tuple
+            a = 'http://api.crunchbase.com/v/1/' + entity_type + '/' + permalink + '.js?api_key=' + self.api_key
+            try:
+                temp = requests.get(a)
+                if temp.status_code != 200:
+                    sleep(3)
+                    temp = requests.get(a)
+                d = temp.json()
+                d['_id'] = permalink
+                mongo_collection.save(d)
+
+            except JSONDecodeError as de:
+                print 'Decode Error on ', temp.status_code
+                print '   URL: ', a
+                print '   Error args:', de.args
+                if self.open_log_file:
+                    self.open_log_file.writelines(['\ndecode error: ' + permalink])
+                sleep(3)
+
+            except ValueError as ev:
+                print 'Expected Value Error, Get Status_code', temp.status_code, 'Retry after sleep'
+                print '   Error args:', ev.args
+                sleep(3)
+                temp = requests.get(a)
+                d = temp.json()
+                d['_id'] = permalink
+                mongo_collection.save(d)
+                if temp.status_code == 200:
+                    print 'Success for ', a, '\n'
+
+            except BaseException as exp:
+                print 'Error in api_call, Text:', exp, link_type_tuple
+
+    def load_url(self, type, collection, permalink, timeout):
+
+        a = 'http://api.crunchbase.com/v/1/' + type + '/' + permalink + '.js?api_key=' + self.api_key
+        #print 'In load_url', type, permalink, collection
+        temp = requests.get(a, timeout=timeout)
+        d = temp.json()
+        d['_id'] = permalink
+        collection.save(d)
+        return d
+
+    def cycle(self, entity_type, permalink_list, mongo_collection):
+
+        t0 = i = 0
+        for i in xrange(0, len(permalink_list), 10):
+            duration = time.time() - t0
+            if duration < 1:
+                sleep(1.1 - duration)
+                print 'sleeping for', 1.1 - duration
+            t0 = time.time()
+            out_str = 'Starting Iter, time for last 10: ' + entity_type + ' ' + str(i) + ' ' + str(duration) + ' Seconds'
+            print out_str
+            # if self.open_log_file:
+            #     self.open_log_file.writelines(['\n',out_str])
+            #     self.open_log_file.flush()
+            permalinks = permalink_list[i:i+10]
+            tl0 = time.time()
+
+
+            with futures.ThreadPoolExecutor(max_workers=10) as executor:
+                future_to_url = dict((executor.submit(self.load_url, type=entity_type,
+                                                      collection=mongo_collection,
+                                                      permalink=permalink,
+                                                      timeout=30), permalink)
+                                     for permalink in permalinks)
+
+                # print '*****Future to url'
+                # for k, val in future_to_url.iteritems():
+                #     print '   ', k, val
+
+                for i, future in enumerate(futures.as_completed(future_to_url)):
+                    json_dict = future_to_url[future]
+                    #print 'result in future', future.result()
+                    if future.exception() is not None:
+                        print('%r generated an exception: %s' % ("ddd", future.exception()))
+                    #else:
+                        #print('%r page is %d bytes' % (permalink, len(future.result())))
+                        #print i,'.',
+
 
     def store_webpages(self, key_dict_lst, entity_type, save_bucket):
         """OLD---Given list of permalinks (in dicts), download web pages from crunchbase, and save in s3."""
