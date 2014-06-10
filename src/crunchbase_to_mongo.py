@@ -29,9 +29,10 @@ indicating which links to follow.
 import sys
 from src.CrunchbaseApi import CrunchbaseApi
 from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
 
 start_id = 1
-count = 9999999
+count = 20000
 num_of_list = 0
 log_file_name = "process_log.txt"
 pickle_dir = 'c:/users/casson/desktop/startups/data/'
@@ -55,7 +56,12 @@ def main():
     print 'Starting Main'
     open_log_file = open(log_file_name, 'w')
     crunch = CrunchbaseApi(open_log_file = open_log_file)
-    client = MongoClient()
+    try:
+        client = MongoClient()
+    except ConnectionFailure as cf:
+        print "ConnectionFailure: make sure MongoDB is running."
+        print cf.args
+
     mc = client.crunchbase
 
     # Get pertinent lists to drive downloads, save in pickle files
@@ -69,7 +75,9 @@ def main():
         print 'Getting data for list of', entity_type
         mongo_collection = mc[entity_type_list.replace('-', '_')]
         entity_list = crunch.get_pickled_entity_list(pickle_dir + entity_type + '_list_2014Apr13.pkl')
-        crunch.cycle_through_permalinks(entity_type, entity_list[start_id:start_id+count], mongo_collection)
+        #crunch.cycle_through_permalinks(entity_type, entity_list[start_id:start_id+count], mongo_collection)
+
+        crunch.cycle(entity_type, entity_list[start_id:start_id+count], mongo_collection)
 
     open_log_file.close()
     print 'Done Cycling Through Permalinks'

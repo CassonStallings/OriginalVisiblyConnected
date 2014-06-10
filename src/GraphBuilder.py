@@ -1,5 +1,6 @@
 # TODO: Check that all routines are used
 import copy, csv, uuid, re
+import cPickle
 from py2neo import neo4j
 from py2neo import cypher
 from py2neo import node, rel
@@ -10,12 +11,27 @@ from py2neo.neo4j import CypherQuery
 class GraphBuilder(neo4j.GraphDatabaseService):
     """Extend py2neo class to handle specifics of ETL from Mongo to Neo4j."""
 
-    #neo4j_uri = 'http://localhost:7474/db/data/'
+    neo4j_uri = 'http://localhost:7474/db/data/'
 
     properties_to_delete = ['_id', 'video_embeds', 'web_presences', 'degrees', 'relationships', 'external_links',
                             'milestones', 'investments', 'image','funds', 'funding_rounds', 'providerships',
                             'tag_list', 'offices', 'partners', 'products', 'screenshots', 'competitions',
-                            'acquisitions', 'acquisition', 'ipo']
+                            'acquisitions', 'acquisition', 'ipo',  'available_sizes']
+
+
+    #### New section
+
+    # # Initialize from pickled file
+    # def load_data_from_pickle(self, pickle_file):
+    #     with open(pickle_file) as fil:
+    #         self = cPickle.load(fil)
+
+    # Cypher Query
+    def CypherQuery(self, cypher):
+        """Returns a CypherQuery."""
+        return neo4j.CypherQuery(self, cypher)
+
+
 
     # TODO: add acquisition and ipo to graphs
 
@@ -58,6 +74,16 @@ class GraphBuilder(neo4j.GraphDatabaseService):
         batch.submit()
         #return anode
 
+    def get_permalink(self, adict):
+        """Given a node or edge dictionary, tries to get or build the permalink, if not returns uuid."""
+        if 'permalink' in adict:
+            permalink = adict['permalink']
+        elif 'crunchbase_url' in adict:
+            permalink = adict['crunchbase_url'].split('/', -1)[-1]
+        else:
+            permalink = str(uuid.uuid1())
+        return permalink
+
     def get_or_add_node_to_batch(self, node_dict, label_index, batch, stub='', create=True):
         """Given a node dictionary, gets an existing node, or creates a new one and returns it.
 
@@ -75,9 +101,8 @@ class GraphBuilder(neo4j.GraphDatabaseService):
         :rtype Node, BatchObject, or None: a node or BatchObject representing a node
         """
         key = 'permalink'
-        if node_dict.has_key(key):
-            value = str(node_dict[key])
-        else:
+        value = self.get_permalink(node_dict)
+        if value is None:
             return None
 
         # Attempt to get the node from Neo4j
@@ -85,10 +110,12 @@ class GraphBuilder(neo4j.GraphDatabaseService):
 
         # If the node was found then update the properties
         if anode:
+            node_dict = self.cleanse_properties(node_dict)
             anode.update_properties(node_dict)
+
         # Node did not already exist, create it or add it to the batch
         if not anode:
-            node_properties = self.get_node_properties_from_dictionary(node_dict)
+            node_properties = self.cleanse_properties(node_dict)
             if create:
                 node_properties.update({'visited': 'False', 'stub': stub})
                 anode = self.get_or_create_indexed_node(label_index, key, value, node_properties)
@@ -99,22 +126,35 @@ class GraphBuilder(neo4j.GraphDatabaseService):
                 batch.set_properties(anode, {'visited': 'False', 'stub': stub})
         return anode
 
-    def get_node_properties_from_dictionary(self, node_dict):
-        """Given a dictionary, strips lists and nulls, returns properties dict for node creation.
+    def cleanse_properties(self, adict):
+        """Given a dictionary, strips lists and nulls, cleans some chars, returns properties dict for node creation.
 
-        :param dict node_dict: properties dictionary, probably from Mongo with list attributes.
+        Strips non-unicode characters from overview, name, and description.
+        Removes <p> and some non-printing characters.
+
+        :param dict adict: properties dictionary, probably from Mongo with list attributes.
         :rtype dict: dictionary with selected properties removed.
         """
-        node_properties = copy.copy(node_dict)
+        new_dict = copy.copy(adict)
         for key in self.properties_to_delete:
-            if node_properties.has_key(key):
-                del node_properties[key]
-        for key in node_properties.keys():
-            if node_properties[key] == None:
-                del node_properties[key]
-        return node_properties
+            if new_dict.has_key(key):
+                del new_dict[key]
+        for key in new_dict.keys():
+            if new_dict[key] is None:
+                del new_dict[key]
+        new_dict = self.encode_chars(new_dict)
+        return new_dict
 
-    def add_edges_to_graph(self, db, collection, index='funder', edge_names=[], relationship_type='funded', limit=0):
+    def encode_chars(self, adict):
+        for key in ['name', 'first_name', 'last_name', 'overview', 'description',
+                    'address1', 'address2', 'source_description']:
+            if key in adict:
+                astr = re.sub('[\t\n\r\f\v]|</?p>', ' ', adict[key], count=20)
+                adict[key] = unicode(astr)
+        return adict
+
+
+    def add_edges_to_graph(self, db, collection, index='funder', edge_names=[], limit=0):
         """ Adds edges described in Mongo Collection to graph.
 
         Adds all edges of the type in collection unless limit is set.
@@ -122,7 +162,6 @@ class GraphBuilder(neo4j.GraphDatabaseService):
         :param str db: Mongo database
         :param str collection: Collection in the database
         :param str index: index for funder nodes (funder or person)
-        :param str relationship_type: type of relationship being added
         :param int limit: maximum records to retrieve from Mongo, if 0 all are retrieved
         :rtype None:
         """
@@ -153,7 +192,7 @@ class GraphBuilder(neo4j.GraphDatabaseService):
             # Get the source node, if it doesn't exist then create one using current properties
             source_node = self.get_indexed_node(index, 'permalink', d['permalink'])
             if not source_node:
-                source_properties = self.get_node_properties_from_dictionary(d)
+                source_properties = self.cleanse_properties(d)
                 source_node = self.get_or_create_indexed_node(index, 'permalink', d['permalink'],
                                                               properties=source_properties)
             for edge_type in edge_names_by_node_type[index]:
@@ -168,16 +207,12 @@ class GraphBuilder(neo4j.GraphDatabaseService):
 
         batch.submit()
 
-    def add_relationships_to_graph(self, source_node, prop_dict, batch, relationship_type=''):
-        """
-        Add funding round relationships for one investor (financial org or person).
-
-        Assumes a company is receiving the funds.
+    def add_relationships_to_graph(self, source_node, prop_dict, batch):
+        """Add relationships between people and companies/other.
 
         :param Node source_node: source node for relationship
         :param dict prop_dict: single dictionary from source's list
         :param WriteBatch batch: neo4j WriteBatch
-        :param str relationship_type: Type for created relationship (e.g. funded)
         :rtype None:
         """
 
@@ -309,13 +344,14 @@ class GraphBuilder(neo4j.GraphDatabaseService):
         node_type = 'person'
         query_str = 'match (n:' + node_type + ') ' + ' return n'
         initial_dict = {'label': node_type}
-        person_fields = [u'nodes', u'id', u'label', u'first_name', u'last_name', u'affiliation_name',u'created_at',
-                         u'updated_at', u'twitter_username', u'blog_feed_url', u'blog_url', u'alias_list',
-                         u'born_month',u'crunchbase_url', u'homepage_url', u'born_day', u'born_year']
+        person_fields = [u'nodes', u'id', u'label', u'first_name', u'last_name', u'affiliation_name', u'alias_list',
+                        u'crunchbase_url',u'born_year']
+        # Probably don't need: u'created_at', u'updated_at', u'twitter_username', u'blog_feed_url',
+        #      u'blog_url', u'born_month', u'homepage_url', u'born_day',
         result = CypherQuery(self, 'match (n:' + node_type + ') ' + ' return count(n);').execute()
         count, = result.data[0].values
         count = min(count, limit)
-        print 'count person nodes', count
+        print '\nBeginning export of {} person nodes'.format(count)
         self.export_nodes_to_csv(node_type, query_str, count, out_file_name, person_fields, initial_dict, sep='\n')
 
     def export_company_node_to_csv(self, out_file_name='company_nodes.tab', limit=9999999):
@@ -326,14 +362,15 @@ class GraphBuilder(neo4j.GraphDatabaseService):
         query_str = 'match (n:' + node_type + ') ' + ' return n '
         initial_dict = {'label': node_type}
         company_fields = [u'nodes', u'id', u'label', u'name', u'category_code', u'crunchbase_url', u'description',
-                           u'number_of_employees', u'created_at', u'updated_at', u'founded_day', u'alias_list',
-                           u'deadpooled_month', u'deadpooled_year', u'deadpooled_day', u'deadpooled_url',
-                           u'twitter_username', u'homepage_url', u'total_money_raised', u'blog_url', u'error',
-                           u'blog_feed_url', u'founded_month', u'email_address', u'founded_year']
+                           u'number_of_employees', u'alias_list', u'deadpooled_year',
+                           u'total_money_raised', u'error', u'founded_year']
+        # Probably don't need:  u'deadpooled_month',u'created_at', u'updated_at', u'founded_day',
+        #    u'deadpooled_day', u'deadpooled_url', u'twitter_username', u'homepage_url',
+        #    u'blog_url', u'blog_feed_url', u'founded_month', u'email_address',
         result = CypherQuery(self, 'match (n:' + node_type + ') ' + ' return count(n);').execute()
         count, = result.data[0].values
         count = min(count, limit)
-        print 'count company nodes', count
+        print '\nBeginning export of {} company nodes'.format(count)
         self.export_nodes_to_csv('company', query_str, count, out_file_name, company_fields, initial_dict, sep='\n')
 
     def export_financial_nodes_to_csv(self, out_file_name='financial_nodes.tab', limit=9999999):
@@ -344,14 +381,15 @@ class GraphBuilder(neo4j.GraphDatabaseService):
         query_str = 'match (n:' + node_type + ') ' + ' return n '
         initial_dict = {'label': node_type}
         funder_fields = [u'nodes', u'id', u'label', u'name', u'permalink', u'crunchbase_url', u'homepage_url',
-                         u'blog_url', u'blog_feed_url', u'description', u'overview', u'twitter_username',
-                         u'phone_number',u'email_address', u'founded_month', u'founded_year', u'created_at',
-                         u'updated_at', u'founded_day', u'alias_list', u'tag_list', u'deadpooled_month',
-                         u'deadpooled_year', u'deadpooled_day', u'deadpooled_url', u'total_money_raised', u'error',]
+                         u'description', u'overview', u'twitter_username', u'founded_year',
+                         u'alias_list', u'tag_list', u'deadpooled_month',
+                         u'deadpooled_year', u'total_money_raised', u'error']
+        # Don't need:  u'blog_url', u'blog_feed_url', u'phone_number', u'email_address', u'founded_month',
+        #   u'created_at', u'updated_at', u'founded_day', u'deadpooled_day', u'deadpooled_url',
         result = CypherQuery(self, 'match (n:' + node_type + ') ' + ' return count(n);').execute()
         count, = result.data[0].values
         count = min(count, limit)
-        print 'count financial nodes', count
+        print '\nBeginning export of {} financial-institution nodes'.format(count)
         self.export_nodes_to_csv(node_type, query_str, count, out_file_name, funder_fields, initial_dict, sep='\n')
 
     def export_funded_relationships_to_csv(self, out_file_name='funded_relations.tab', limit=9999999):
@@ -362,13 +400,16 @@ class GraphBuilder(neo4j.GraphDatabaseService):
         query_str = 'match (a)-[r:' + rel_type + ']->(b) ' + ' return a.permalink as source, r, b.permalink as target, id(r) as id'
         initial_dict = {'label': rel_type, 'source_id': ''}
         funded_fields = [u'source', u'target', u'type', u'source_id', u'id', u'label', u'name', u'category_code',
-                         u'crunchbase_url', u'funded_month', u'source_description', u'round_code', u'raised_amount',
-                         u'source_url', u'raised_currency_code', u'funded_year', u'funded_day']
+                         u'crunchbase_url',  u'round_code', u'raised_amount',
+                         u'permalink', u'source_url', u'raised_currency_code', u'funded_year']
+        # Source descriptions has lots of non-standard characters--u'source_description',
+        # Probably don't need: u'funded_month', u'funded_day'
         result = CypherQuery(self, 'match ()-[r:' + rel_type + ']->() ' + ' return count(r);').execute()
         count, = result.data[0].values
         count = min(count, limit)
         print 'Count rels', count
         self.export_relations_to_csv('funded', query_str, count, out_file_name, funded_fields, initial_dict, sep='\n')
+
 
     def export_relations_to_csv(self, type, query_str, count, out_file, fields, initial_dict={}, sep=','):
         """Export general relationships to csv for import to Gephi.
@@ -381,6 +422,7 @@ class GraphBuilder(neo4j.GraphDatabaseService):
         :param str sep: separator to use in output file
         :rtype None:
         """
+
         field_set = set()
         header_set = set()
         n_exported = 0
@@ -399,83 +441,46 @@ class GraphBuilder(neo4j.GraphDatabaseService):
 
             for first in xrange(0, count, query_size):
                 query_str_with_limits = query_str + ' skip ' + str(first) + ' limit ' + str(query_size) + ';'
-                print 'first, query_str_with_limits', first, ' :: ', query_str_with_limits
-                try:
-                    query = CypherQuery(self, query_str_with_limits)
-                    for relationship in query.stream():
-                        relation_str = str(relationship.values[1]).encode('ascii')
-                        # TODO: unicode errors are in relation_str, or occur when its pattern matched below
-                        print 'relation_str', relation_str
-                        ###### line above will trigger error
-    # you can use extract to get node and relationship properties
-    #
-    #
-    # return extract(r in rels(path) : r.foo)
-    # or
-    # return extract(n in nodes(path) : n.bar)
 
-                        pat = re.compile("""\(([0-9]{4,8})\)                    # [0]Source id
-                                            [-<]{1,2}\[\:                       # Pointer
-                                            ([0-9a-zA-Z-_]{2,40})[ ]?           # [1]Relationship type
-                                            (\{.*\})                            # [2]Properties dictionary
-                                            \][->]{1,2}                         # Pointer
-                                            \(([0-9]{4,8})\)?""", re.X)         # [3]Target id
 
-                        try:
-                            match_obj = re.search(pat, str(relation_str))
-                            if not match_obj:
-                                print 'Error matching relationship ', ':' + relation_str + ':'
-                                continue
+                query = CypherQuery(self, query_str_with_limits)
+                for relationship in query.stream():
 
-                            d = initial_dict
-                            d['source'] = match_obj.groups()[0]
-                            d['label'] = match_obj.groups()[1]
-                            d['type'] = match_obj.groups()[1]
-                            d['target'] = match_obj.groups()[3]
-                            # todo tried to encode here
-                            print 'd', d
-                            pseudo_dict = match_obj.groups()[2].replace('""', '').encode('utf-8')
-                            print 'pseudo_dict', pseudo_dict
-                            #pseudo_dict['source_description'] = pseudo_dict['source_description'].encode('utf-8')
-                            for item in re.findall('(\w*)":("\w*"|[0-9.]{1,15})', pseudo_dict):
-                                d[list(item)[0]] = list(item)[1]
-                                print 'item', item
-                            # todo: ########################
+                    #print 'try to pull out rels parts', len(relationship)
+                    rel_parts = relationship.values[1]
+                    d = initial_dict
+                    d['label'] = rel_parts.type
+                    d['type'] = rel_parts.type
+                    d['source'] = self.encode_chars(rel_parts.start_node)
+                    d['target'] = self.encode_chars(rel_parts.end_node)
+                    d['permalink'] = rel_parts.start_node['permalink'] + '__' + rel_parts.end_node['permalink']
+                    edge_properties = self.encode_chars(rel_parts.get_properties())
+                    d['source']['overview'] = ''
+                    d['target']['overview'] = ''
+                    print 'Edge_props (cleaned)', edge_properties
+                    print '  Source props (cleaned)', d['permalink']
+                    #print '  Source', d['source']
+                   # TODO: unicode errors are in source or target node information
 
-                            if not 'permalink' in d:
-                                if 'crunchbase_url' in d:
-                                    d['permalink'] = d['crunchbase_url'].split('/', -1)[-1]
-                                else:
-                                    d['permalink'] = uuid.uuid4()
-                            d['id'] = d['permalink']
-                            for key in d:
-                                field_set.add(key)
+                    try:
+                        d['id'] = d['permalink']
+                        for key in d:
+                            field_set.add(key)
+                        d.update(edge_properties)
 
-                            dw.writerow(d)
-                            n_exported += 1
-                            if (n_exported % 1000) == 0:
-                                print 'Relationships exported: ', n_exported
-                        except UnicodeEncodeError as uee:
-                            n_errors += 1
-                            print 'Unicode Error Inside in Export Relationships', uee.args
-                        except ValueError as err:
-                            n_errors += 1
-                            print 'Unknown Error Inside in Export Relationships', err.args
+                        dw.writerow(self.encode_chars(d))
+                        n_exported += 1
+                        if (n_exported % 1000) == 0:
+                            print 'Relationships exported: ', n_exported
+                    except UnicodeEncodeError as uee:
+                        n_errors += 1
+                        print 'Unicode Error Inside in Export Relationships', uee.args
+                    except ValueError as err:
+                        n_errors += 1
+                        print 'Unknown Error Inside in Export Relationships', err.args
 
-                except UnicodeEncodeError as uee:
-                    n_errors += 1
-                    print 'Unicode Error Outside in Export Relationships', uee.args
-                # except OutOfMemoryError as oome:
-                #     print 'Out of Memory Error', oome.args
-                #     return
-                except ValueError as err:
-                    n_errors += 1
-                    print 'Unknown Error Outside in Export Relationships', err.args
-
-        print 'Fields not used in ', type, ':', field_set - header_set
-        print 'Done with export of ', type
-        print '     Exported: ', n_exported
-        print '     Errors:   ', n_errors
+        print '\nExport of {} {} relationships complete. There were {} errors.'.format(n_exported, type, n_errors)
+        print '   Unexported fields: {}'.format(field_set - header_set)
 
     def export_nodes_to_csv(self, type, query_str, count, out_file, fields, initial_dict={}, sep=','):
         """Export general nodes to csv for import to Gephi.
@@ -506,44 +511,34 @@ class GraphBuilder(neo4j.GraphDatabaseService):
 
             for first in xrange(0, count, query_size):
                 query_str_with_limits = query_str + ' skip ' + str(first) + ' limit ' + str(query_size) + ';'
-                print 'first, query_str_with_limits', first, ' :: ', query_str_with_limits
-                try:
-                    print 'query string ::', query_str
-                    query = CypherQuery(self, query_str_with_limits)
-                    for item in query.stream():
-                        for anode in item:
-                            try:
-                                d = initial_dict
-                                if not anode['permalink'] and anode['crunchbase_url']:
-                                    anode['permalink'] = anode['crunchbase_url'].split('/', -1)[-1]
-                                d['nodes'] = anode['permalink']
-                                d['id'] = anode._id
-                                d.update(anode.get_properties())
-                                for key in anode:
-                                    field_set.add(key)
-                                dw.writerow(d)
-                                n_exported += 1
-                                if (n_exported % 1000) == 0:
-                                    print 'Nodes exported ', n_exported
-                            except UnicodeEncodeError as uee:
-                                n_errors += 1
-                                print 'Unicode Error Inside on Nodes', uee.args
-                            except ValueError as ve:
-                                n_errors += 1
-                                print 'Value Error Inside on Nodes', ve.args
-                            except:
-                                print 'Unknown Error Inside on Nodes'
-                except UnicodeEncodeError as uee:
-                    n_errors += 1
-                    print 'Unicode Error Outside on Nodes', uee.args
-                # except OutOfMemoryError as oome:
-                #     print 'Out of Memory Error', oome.args
-                #     return
-                except ValueError as ve:
-                    n_errors += 1
-                    print 'Unknown Error Outside on Nodes', ve.args
 
-        print 'Fields not used in ', type, ':', field_set - header_set
-        print 'Done with export of ', type
-        print '     Exported: ', n_exported
-        print '     Errors:   ', n_errors
+                query = CypherQuery(self, query_str_with_limits)
+                for item in query.stream():
+                    for anode in item:
+                        anode = item.values[0]
+                        try:
+                            d = copy.copy(initial_dict)
+                            anode['permalink'] = self.get_permalink(anode)
+                            d['nodes'] = anode['permalink']
+                            d['id'] = anode._id
+                            nd = dict()
+
+                            for key, val in anode.get_properties().iteritems():
+                                field_set.add(key)
+                                nd[key] = val
+                            d.update(nd)
+                            dw.writerow(d)
+
+                            n_exported += 1
+                            if (n_exported % 1000) == 0:
+                                print 'Nodes exported ', n_exported
+                        except UnicodeEncodeError as uee:
+                            n_errors += 1
+                            print 'Unicode Error Inside on Nodes', uee.args
+                        except ValueError as ve:
+                            n_errors += 1
+                            print 'Value Error Inside on Nodes', ve.args
+
+        print '\nExport of {} {} nodes complete. There were {} errors.'.format(n_exported, type, n_errors)
+        print '   Unexported fields: {}'.format(field_set - header_set)
+

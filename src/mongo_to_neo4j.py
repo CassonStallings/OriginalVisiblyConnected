@@ -18,19 +18,19 @@ def main():
     g = GraphBuilder('http://localhost:7474/db/data/')
 
     # uncomment to start with fresh database
-    # g.clear()
+    g.clear()
     #
     # print 'Neo4j Version', g.neo4j_version
     #
     # # Grab all nodes from mongo database and  add to graph database
-    # g.add_node_collection_to_graph('crunchbase', 'financial_organizations', 'funder', limit=200)
-    # g.add_node_collection_to_graph('crunchbase','people', 'person', limit=200)
-    # g.add_node_collection_to_graph('crunchbase', 'companies', 'company', limit=200)
+    g.add_node_collection_to_graph('crunchbase', 'financial_organizations', 'funder', limit=200)
+    g.add_node_collection_to_graph('crunchbase','people', 'person', limit=200)
+    g.add_node_collection_to_graph('crunchbase', 'companies', 'company', limit=200)
     #
     # # Add funding rounds by financial organizations and individuals
-    # g.add_edges_to_graph('crunchbase', 'companies', index='company', relationship_type='funded', limit=200)
-    # g.add_edges_to_graph('crunchbase', 'financial_organizations', index='funder', relationship_type='funded', limit=200)
-    # g.add_edges_to_graph('crunchbase', 'people', index='person', relationship_type='funded', limit=200)
+    g.add_edges_to_graph('crunchbase', 'companies', index='company', limit=200)  ##  relationship_type='funded', limit=200)
+    g.add_edges_to_graph('crunchbase', 'financial_organizations', index='funder', limit=200)   ## relationship_type='funded', limit=200)
+    g.add_edges_to_graph('crunchbase', 'people', index='person', limit=200)  ##  relationship_type='funded', limit=200)
 
     print 'Nodes in graph', g.order
 

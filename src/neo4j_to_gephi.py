@@ -11,7 +11,9 @@ __author__ = 'Casson'
 from src.GraphBuilder import GraphBuilder
 
 def main():
-    #TODO Deal with unicode errors
+    # TODO Deal with unicode errors
+    # TODO Too much junk is going to export relationships
+    # TODO Are there dates in the neo4j database (as opposed to year month day)
     g = GraphBuilder('http://localhost:7474/db/data/')
     # g.export_person_nodes_to_csv(out_file_name='person_nodes.tab')
     # g.export_company_node_to_csv(out_file_name='company_nodes.tab')
