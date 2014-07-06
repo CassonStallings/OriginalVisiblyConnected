@@ -1,16 +1,16 @@
-
 """
-Name:        crunchbase_to_mongo.py (was crunchbase2.py)
-Purpose:     Pulls data from crunchbase through the API and stores JSON
-               documents in MongoDB which may be running on AWS. It
-               set up to get all data, not data related to specific
-               queries.
-               Contains class CrunchbaseApi
-Requires:    CrunchbaseApi API key and if s3 is used AWS ID and key pair.
-Author:      Casson
-Created:     3/12/2014
-Copyright:   (c) Casson 2014
-Licence:     <your licence>
+Name:       crunchbase_to_mongo.py (was crunchbase2.py)
+Purpose:    Pulls data from crunchbase through the API and stores JSON
+            documents in MongoDB which may be running locally or on AWS. It is
+            set up to get all data, not data related to specific
+            queries.
+Requires:   If AWS is used the AMAZON_ACCESS_KEY_ID and AMAZON_SECRET_ACCESS_KEY are needed.
+            Crunchbase API is required and should be be stored in an environmental variable,
+            CRUNCHBASE_API_KEY, if not passed in.
+Author:     Casson Stallings, CassonStallings@gmail.com
+Created:    3/12/2014
+Copyright:  Casson Stallings (c) 2014
+Licence:    Apache version 2.0
 
 Program is typically run from command line and given parameters
 indicating which links to follow.

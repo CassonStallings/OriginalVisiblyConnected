@@ -1,9 +1,20 @@
+"""
+Name:       GraphBuilder.py
+Purpose:    Class extending py2neo with tools to create a Neo4j graph database
+            using Crunchbase data stored in MongoDB or to export Neo4j database
+            for import to Gephi.
+Assumes:    Data stored in MongoDB using CrunchbaseAPI.
+            Local URI for Neo4j is hardcoded in class, but easily changed.
+Author:     Casson Stallings, CassonStallings@gmail.com
+Created:    3/12/2014
+Copyright:  Casson Stallings (c) 2014
+Licence:     Apache License, Version 2.0
+"""
+
 # TODO: Check that all routines are used
 import copy, csv, uuid, re
-import cPickle
 from py2neo import neo4j
-from py2neo import cypher
-from py2neo import node, rel
+from py2neo import node
 from pymongo import MongoClient
 from py2neo.neo4j import CypherQuery
 
@@ -18,20 +29,10 @@ class GraphBuilder(neo4j.GraphDatabaseService):
                             'tag_list', 'offices', 'partners', 'products', 'screenshots', 'competitions',
                             'acquisitions', 'acquisition', 'ipo',  'available_sizes']
 
-
-    #### New section
-
-    # # Initialize from pickled file
-    # def load_data_from_pickle(self, pickle_file):
-    #     with open(pickle_file) as fil:
-    #         self = cPickle.load(fil)
-
     # Cypher Query
     def CypherQuery(self, cypher):
         """Returns a CypherQuery."""
         return neo4j.CypherQuery(self, cypher)
-
-
 
     # TODO: add acquisition and ipo to graphs
 

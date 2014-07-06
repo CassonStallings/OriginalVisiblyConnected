@@ -1,15 +1,12 @@
-#-------------------------------------------------------------------------------
-# Name:        mongo_to_neo4j.py
-# Purpose:     extends py2neo Graph class with methods specific to retrieving
-#                crunchbase data from MongoDB and putting it in neo4j.
-#                It performs ETL, cleaning data in mongo and structuring
-#                it in neo4j using py2neo. The main program carries out the
-#                the work using the graph class.
-# Author:      Casson Stallings
-# Created:     3/12/2014
-# Copyright:   (c) Casson 2014
-# Licence:     <your licence>
-#-------------------------------------------------------------------------------
+"""
+Name:       mongo_to_neo4j.py
+Purpose:    Uses class GraphBuilder a class extending py2neo, cleaning Crunchbase
+            data in mongo and creating a neo4j graph database.
+Author:     Casson Stallings, CassonStallings@gmail.com
+Created:    3/12/2014
+Copyright:  Casson Stallings (c) 2014
+Licence:    Apache version 2.0
+"""
 
 from src.GraphBuilder import GraphBuilder
 

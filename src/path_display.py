@@ -1,11 +1,11 @@
-#-------------------------------------------------------------------------------
-# Name:        path_display.py (was graph_export.py)
-# Purpose:     Exports data from neo4j in format for Gephi
-# Author:      Casson
-# Created:     3/24/2014
-# Copyright:   (c) Casson 2014
-#-------------------------------------------------------------------------------
-__author__ = 'Casson'
+"""
+Name:       path_display.py
+Purpose:
+Author:     Casson Stallings, CassonStallings@gmail.com
+Created:    3/24/2014
+Copyright:  Casson Stallings (c) 2014
+License:    Apache version 2.0
+"""
 
 
 import copy, re

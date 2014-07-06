@@ -1,12 +1,11 @@
-
-#-------------------------------------------------------------------------------
-# Name:        neo4j_to_gephi.py (was graph_export.py)
-# Purpose:     Exports data from neo4j in format for Gephi
-# Author:      Casson
-# Created:     3/24/2014
-# Copyright:   (c) Casson 2014
-#-------------------------------------------------------------------------------
-__author__ = 'Casson'
+"""
+Name:       crunchbase_to_mongo.py
+Purpose:    Pulls data from MongoDB and exports to Neo4j as nodes and relations.
+Requires:   GraphBuilder.py
+Created:    3/12/2014
+Copyright:  Casson Stallings (c) 2014
+Licence:    Apache version 2.0
+"""
 
 from src.GraphBuilder import GraphBuilder
 
