@@ -1,6 +1,6 @@
 """
 Name:       path_display.py
-Purpose:
+Purpose:    Initial cut at displaying partial networks in Networkx.
 Author:     Casson Stallings, CassonStallings@gmail.com
 Created:    3/24/2014
 Copyright:  Casson Stallings (c) 2014

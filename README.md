@@ -1,11 +1,16 @@
-# Visibly Connected #
+# Visibly Connected I#
 
-Visibly connected was originally created as a two-week capstone project while I was at the Zipfian Academy.
-The software here integrates the complete Crunchbase database into both Neo4j and Gephi for analysis and exploration.
+Visibly connected was originally created as a two-week capstone 
+project while I was at the Zipfian Academy. The software here integrates the 
+complete Crunchbase database into both Neo4j and Gephi for analysis and exploration.
+
+The work of Visibly Connected I is being continued in Visibly Connected II with 
+a Crunchbase class for the Crunchbase API version 2, more emphasis on the 
+analytics, and less on using MongoDB, and Neo4j.
 
 ## Files ##
 ### Presentation and Figures ###
-*   **VisablyConnectedSchema.pptx**
+*   **VisiblyConnectedSchema.pptx**
     Schema of Neo4j Database.
 *   **VisiblyConnectedOriginalPresentation.pptx**
     Slides from three minute presentation on visibly connected.
@@ -46,9 +51,17 @@ The software here integrates the complete Crunchbase database into both Neo4j an
     same into a MongoDB collections on another machine. 
     Will not actually work as a batch file.
     
-###Entity Lists (as of about April 2014)###
+### Pickled Entity Lists ###
+These are the complete permalink lists from Crunchbase as of April 2014.
+*   **company_list_2014Apr13.pkl**
+*   **financial-organization_list_2014Apr13.pkl**
+*   **person_list_2014Apr13.pkl**
+*   **product_list_2014Apr13.pkl**
+*   **service-provider_list_2014Apr13.pkl**
+
+### Gephi Import Files ###
 These files represent the companies, financial entities, and people that are directly related
-funding events. They are suitable for import into Gephi
+funding events. They are circa April 2014 and suitable for import into Gephi.
 *   **company_notes.tab**
 *   **financial_nodes.tab**
 *   **funded_relations.tab**
